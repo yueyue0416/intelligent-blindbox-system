@@ -3,6 +3,7 @@
 
 一个基于 React + Node.js + MySQL + Python/FastAPI + RAG 的智能盲盒推荐与问答系统。
 
+```text
 用户
   ↓
 React 前端（blindbox-local）
