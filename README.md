@@ -1,9 +1,17 @@
 
 # Intelligent Blindbox System
 
-一个基于 React + Node.js + MySQL + Python/FastAPI + RAG 的盲盒推荐与问答系统。
+一个基于 React + Node.js + MySQL + Python/FastAPI + RAG 的智能盲盒推荐与问答系统。
 
----
+用户
+  ↓
+React 前端（blindbox-local）
+  ↓
+Node.js / Express（blindbox-backend）
+  ├── MySQL（业务数据）
+  ├── Agent 编排（任务分流 / 推荐 / 解释）
+  └── Python / FastAPI（blindbox-rag-python）
+          └── DeepSeek API
 
 ## 1. 项目简介
 
