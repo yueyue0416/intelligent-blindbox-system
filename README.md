@@ -1,70 +1,66 @@
-\# 智能盲盒推荐与问答系统
 
-
-
-\## 项目简介
+# Intelligent Blindbox System
 
 一个基于 React + Node.js + MySQL + Python/FastAPI + RAG 的盲盒推荐与问答系统。
 
+---
 
+## 1. 项目简介
 
-\## 项目结构
+本项目围绕“智能盲盒推荐与问答”场景展开，支持以下核心功能：
 
-\- blindbox-frontend：前端页面
+- 盲盒系列展示
+- 抽盒
+- 历史记录查询
+- 个性化推荐
+- 基于知识库的规则问答
+- 推荐解释
 
-\- blindbox-backend：Node/Express 业务服务
+项目整体采用前后端分离架构，并将智能问答能力进一步独立为 Python RAG 服务，形成：
 
-\- blindbox-rag-python：Python/FastAPI RAG 服务
+- **Node.js**：业务服务层
+- **Python/FastAPI**：RAG 智能服务层
 
+---
 
+## 2. 技术栈
 
-\## 核心功能
+### 前端
+- React
+- Vite
+- React Router
+- Axios
 
-\- 系列展示
+### 后端业务服务
+- Node.js
+- Express
+- MySQL
+- mysql2
+- dotenv
 
-\- 抽盒
+### 智能问答服务
+- Python
+- FastAPI
+- Pydantic
+- requests
+- python-dotenv
 
-\- 历史记录
+### AI 能力
+- RAG（Retrieval-Augmented Generation）
+- Tool Calling 思路
+- DeepSeek API
 
-\- 个性化推荐
+### 测试与联调
+- Postman
 
-\- 基于知识库的规则问答与推荐解释
+---
 
+## 3. 项目结构
 
-
-\## 技术栈
-
-React、Node.js、Express、MySQL、Python、FastAPI、RAG
-
-
-
-\## 启动方式
-
-\### 前端
-
-cd blindbox-frontend
-
-npm install
-
-npm run dev
-
-
-
-\### Node 后端
-
-cd blindbox-backend
-
-npm install
-
-npm run dev
-
-
-
-\### Python RAG 服务
-
-cd blindbox-rag-python
-
-pip install -r requirements.txt
-
-python -m uvicorn app.main:app --reload
-
+```text
+intelligent-blindbox-system/
+├─ blindbox-local/             # 前端项目（React）
+├─ blindbox-backend/          # Node.js/Express 业务后端
+├─ blindbox-rag-python/       # Python/FastAPI RAG 服务
+├─ .gitignore
+└─ README.md
