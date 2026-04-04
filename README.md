@@ -10,7 +10,7 @@ React 前端（blindbox-local）
   ↓
 Node.js / Express（blindbox-backend）
   ├── MySQL（业务数据）
-  ├── Agent 编排（任务分流 / 推荐 / 解释）
+  ├── Agent 编排层（任务路由 / 工具调用 / 推荐决策 / 规则问答）
   └── Python / FastAPI（blindbox-rag-python）
           └── DeepSeek API
 
