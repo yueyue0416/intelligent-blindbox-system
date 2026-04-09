@@ -120,7 +120,7 @@ blindbox-system/
    │  └─ docs/
    └─ .env.example
 
-## 5. 升级亮点
+## 4. 升级亮点
 
 ### LangChain 升级
 - 将原本手写的推荐逻辑升级为 **LangChain Recommendation Agent**
