@@ -5,6 +5,34 @@ const path = require('path')
 require('dotenv').config()
 const axios = require('axios')
 const pool = require('./db')
+//langchain动态导入入口
+let recommendationAgentLangChainCached = null
+
+async function getRecommendationAgentLangChain() {
+  if (!recommendationAgentLangChainCached) {
+    const mod = await import('./agents/recommendationAgent.langchain.mjs')
+    recommendationAgentLangChainCached =
+      mod.createRecommendationAgentLangChain({
+        getAllSeriesFromDb
+      })
+  }
+  return recommendationAgentLangChainCached
+}
+
+
+//langgraph动态入口
+let supervisorGraphCached = null
+
+async function getSupervisorGraph() {
+  if (!supervisorGraphCached) {
+    const mod = await import("./graphs/supervisor.langgraph.mjs")
+    supervisorGraphCached = mod.createSupervisorGraph({
+      recommendationAgent,
+      ruleAgent,
+    })
+  }
+  return supervisorGraphCached
+}
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -459,8 +487,8 @@ function retrieveDocs(question, topK = 3) {
     .slice(0, topK)
 }
 // ========== Agent ==========
-
-async function recommendationAgent(input) {
+//函数实现了一个手动版的“工具型 Agent”，它通过直接调用 DeepSeek API，让模型自主决定是否查询数据库，最终给出一个结构化的盲盒推荐结果
+/*async function recommendationAgent(input) {
   const { budget, style, wantHidden } = input
 
   const tools = [
@@ -574,8 +602,12 @@ async function recommendationAgent(input) {
   }
 
   throw new Error('RecommendationAgent 没有返回有效结果')
-}
+}*/
 
+async function recommendationAgent(input) {
+  const agent = await getRecommendationAgentLangChain()
+  return await agent(input)
+}
 /*  轻量Rag(js实现）
 async function ruleAgent(input) {
   const { question, recommendation } = input
@@ -658,7 +690,8 @@ async function ruleAgent(input) {
     answer: result.answer
   }
 }
-async function supervisorAgent(input) {
+//手写版langgraph实现
+/*async function supervisorAgent(input) {
   const { budget, style, wantHidden, question } = input
 
   const hasRecommendInfo =
@@ -708,8 +741,30 @@ async function supervisorAgent(input) {
   }
 
   throw new Error('SupervisorAgent 无法识别当前任务类型')
-}
+}*/
+async function supervisorAgent(input) {
+  const graph = await getSupervisorGraph()
 
+  const state = await graph.invoke({
+    budget: input.budget,
+    style: input.style,
+    wantHidden: input.wantHidden,
+    question: input.question,
+  })
+
+  if (state.resultType === "recommendation_with_explanation") {
+    return {
+      type: "recommendation_with_explanation",
+      recommendation: state.recommendation,
+      answer: state.answer,
+    }
+  }
+
+  return {
+    type: "recommendation",
+    recommendation: state.recommendation,
+  }
+}
 app.post('/api/agent', async (req, res) => {
   try {
     const result = await supervisorAgent(req.body)
